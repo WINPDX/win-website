@@ -651,7 +651,7 @@
         <div class="share-card" style="margin-top:2em">
           <h2>Submit a community event</h2>
           <p style="margin-top:.5em;color:var(--ink-soft)">The steering committee reviews every submission and adds approved events to the calendar. Upload your own flyer if you have one.</p>
-          <form class="cform" style="margin-top:18px">
+          <form class="cform" id="eventForm" style="margin-top:18px">
             <div><label for="ev-name">Event name</label><input id="ev-name" type="text"></div>
             <div class="row2">
               <div><label for="ev-date">Date</label><input id="ev-date" type="date"></div>
@@ -767,7 +767,7 @@
         <div class="share-card" style="margin-top:2em">
           <h2>Join our announcement list</h2>
           <p style="margin-top:.4em;color:var(--ink-soft)">A few emails a month about what's coming up. We'll never share your address.</p>
-          <form class="cform" style="margin-top:16px">
+          <form class="cform" id="joinForm" style="margin-top:16px">
             <div class="row2">
               <div><label for="jn-name">Name</label><input id="jn-name" type="text" autocomplete="name"></div>
               <div><label for="jn-email">Email</label><input id="jn-email" type="email" autocomplete="email"></div>
@@ -828,6 +828,7 @@
   </div>
 </footer>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 <script>
   (function(){
     var pages = ["home","about","events","education","service","contact"];
@@ -857,13 +858,68 @@
     });
     window.addEventListener('hashchange', fromHash);
     fromHash();
+    // ---- Supabase: save signups and event submissions ----
+    var SB_URL = "https://myrqbzlprhfkaxxiantf.supabase.co";
+    var SB_KEY = "sb_publishable_35YzbcMvc_tddWJpVRMhBQ_wOThZLbI";
+    var sb = (window.supabase && window.supabase.createClient) ? window.supabase.createClient(SB_URL, SB_KEY) : null;
+
+    function setMsg(form, text){
+      var m = form.querySelector('.formmsg');
+      if(m){ m.hidden = false; m.textContent = text; }
+    }
+    function val(form, sel){ var el = form.querySelector(sel); return el ? el.value.trim() : ''; }
+
+    var joinForm = document.getElementById('joinForm');
+    if(joinForm){
+      joinForm.addEventListener('submit', function(e){
+        e.preventDefault();
+        var email = val(joinForm, '#jn-email');
+        if(!email){ setMsg(joinForm, "Please enter your email address."); return; }
+        if(!sb){ setMsg(joinForm, "Can't reach the database from this preview — this works on the live site."); return; }
+        var btn = joinForm.querySelector('button[type="submit"]'); var label = btn ? btn.textContent : '';
+        if(btn){ btn.disabled = true; btn.textContent = "Joining…"; }
+        sb.from('signups').insert({ name: val(joinForm,'#jn-name') || null, email: email, religious_affiliation: val(joinForm,'#jn-rel') || null })
+          .then(function(res){
+            if(res.error){ setMsg(joinForm, "Sorry, something went wrong — please try again, or email us."); if(btn){ btn.disabled = false; btn.textContent = label; } return; }
+            joinForm.reset(); if(btn){ btn.textContent = "Joined ✓"; }
+            setMsg(joinForm, "Thanks for joining! You'll hear from us a few times a month.");
+          });
+      });
+    }
+
+    var eventForm = document.getElementById('eventForm');
+    if(eventForm){
+      eventForm.addEventListener('submit', function(e){
+        e.preventDefault();
+        var name = val(eventForm, '#ev-name');
+        if(!name){ setMsg(eventForm, "Please enter the event name."); return; }
+        if(!sb){ setMsg(eventForm, "Can't reach the database from this preview — this works on the live site."); return; }
+        var btn = eventForm.querySelector('button[type="submit"]'); var label = btn ? btn.textContent : '';
+        if(btn){ btn.disabled = true; btn.textContent = "Submitting…"; }
+        sb.from('event_submissions').insert({
+          event_name: name,
+          event_date: val(eventForm,'#ev-date') || null,
+          event_time: val(eventForm,'#ev-time') || null,
+          location: val(eventForm,'#ev-loc') || null,
+          hosting_community: val(eventForm,'#ev-host') || null,
+          description: val(eventForm,'#ev-desc') || null,
+          submitter_name: val(eventForm,'#ev-your-name') || null,
+          submitter_email: val(eventForm,'#ev-your-email') || null
+        }).then(function(res){
+            if(res.error){ setMsg(eventForm, "Sorry, something went wrong — please try again, or email us."); if(btn){ btn.disabled = false; btn.textContent = label; } return; }
+            eventForm.reset(); if(btn){ btn.textContent = "Submitted ✓"; }
+            setMsg(eventForm, "Thank you! Your event was sent to the steering committee for review. (Flyer upload is coming soon.)");
+          });
+      });
+    }
+
+    // Contact message forms stay preview-only until email is wired up
     document.querySelectorAll('form.cform').forEach(function(form){
+      if(form.id === 'joinForm' || form.id === 'eventForm'){ return; }
       form.addEventListener('submit', function(e){
         e.preventDefault();
-        var msg = form.querySelector('.formmsg');
-        if(msg){ msg.hidden = false; msg.textContent = "Thanks! This is a preview, so nothing was sent yet. On the live site, this note will go straight to WIN's inbox."; }
-        var btn = form.querySelector('button[type="submit"]');
-        if(btn){ btn.textContent = "Message ready"; }
+        setMsg(form, "Thanks! Message sending isn't connected yet — for now, please email westsideinterfaithneighborspdx@gmail.com.");
+        var btn = form.querySelector('button[type="submit"]'); if(btn){ btn.textContent = "Message ready"; }
       });
     });
   })();
