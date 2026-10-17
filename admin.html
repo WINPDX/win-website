@@ -7,7 +7,7 @@
 <style>
   :root{
     --bg:#f4f1ea; --card:#ffffff; --ink:#17201d; --soft:#52605c; --border:#d8dedb;
-    --header:#1b1b1b; --green:#0e7152; --green-ink:#0b5a41; --red:#b4342a; --amber:#8c5a10;
+    --header:#1b1b1b; --green:#0e7152; --green-ink:#0b5a41; --red:#b4342a;
     --font:"Public Sans",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
   }
   *{box-sizing:border-box}
@@ -17,12 +17,12 @@
   header.bar{background:var(--header);color:#fff;padding:14px 20px;display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center}
   header.bar .title{font-size:1.3rem;font-weight:700;letter-spacing:.04em}
   header.bar .who{margin-left:auto;color:#cfe3dd;font-size:.95rem}
-  header.bar button{margin-left:12px}
-  .wrap{max-width:900px;margin:0 auto;padding:22px max(16px,env(safe-area-inset-left,0px)) 60px}
-  .card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;margin-top:18px;box-shadow:0 1px 2px rgba(0,0,0,.05)}
+  .wrap{max-width:900px;margin:0 auto;padding:22px max(16px,env(safe-area-inset-left,0px)) 70px}
+  .card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;margin-top:16px;box-shadow:0 1px 2px rgba(0,0,0,.05)}
   label{display:block;font-weight:600;margin:0 0 6px}
-  input{width:100%;font:inherit;padding:12px 14px;border:1px solid var(--border);border-radius:9px;background:#fff;color:var(--ink)}
-  button{font:inherit;font-weight:700;cursor:pointer;border:0;border-radius:9px;padding:11px 18px}
+  input,textarea{width:100%;font:inherit;padding:12px 14px;border:1px solid var(--border);border-radius:9px;background:#fff;color:var(--ink)}
+  textarea{min-height:120px;resize:vertical}
+  button{font:inherit;font-weight:700;cursor:pointer;border:0;border-radius:9px;padding:10px 16px}
   .btn-green{background:var(--green);color:#fff}
   .btn-red{background:var(--red);color:#fff}
   .btn-ghost{background:#eef3f1;color:var(--ink);border:1px solid var(--border)}
@@ -30,25 +30,39 @@
   .msg{margin-top:14px;padding:12px 14px;border-radius:9px;background:#eef3f1;border-left:4px solid var(--green);color:var(--ink)}
   .msg.err{border-left-color:var(--red)}
   .muted{color:var(--soft)}
-  .section-title{font-size:1.25rem;font-weight:700;margin-top:30px;padding-bottom:8px;border-bottom:2px solid rgba(14,113,82,.5)}
-  .count{color:var(--soft);font-weight:400;font-size:1rem}
-  .sub{display:grid;gap:4px 16px;grid-template-columns:auto 1fr;font-size:.97rem;margin:10px 0}
-  .sub dt{color:var(--soft)}
-  .sub dd{margin:0}
+  .center{max-width:460px;margin:60px auto}
+
+  /* Tabs */
+  .tabs{display:flex;flex-wrap:wrap;gap:6px;border-bottom:2px solid var(--border);margin-top:8px}
+  .tabs button{background:transparent;border:0;border-bottom:3px solid transparent;border-radius:0;padding:12px 16px;color:var(--soft);font-weight:700;margin-bottom:-2px}
+  .tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--green)}
+  .panelhead{display:flex;flex-wrap:wrap;gap:10px;align-items:baseline;justify-content:space-between;margin-top:22px}
+  .panelhead h2{font-size:1.3rem;font-weight:700}
+
+  /* Filter chips */
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+  .chip{background:#eef3f1;border:1px solid var(--border);border-radius:999px;padding:6px 14px;font-weight:600;font-size:.92rem;color:var(--soft);cursor:pointer}
+  .chip[aria-pressed="true"]{background:var(--green);border-color:var(--green);color:#fff}
+
   .pill{display:inline-block;font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;padding:3px 10px;border-radius:999px}
   .pill.pending{background:#fdecd2;color:#8c5a10}
   .pill.approved{background:#d7ebe6;color:#0b5a41}
   .pill.rejected{background:#f3dad7;color:#9a2b22}
+  .pill.active{background:#d7ebe6;color:#0b5a41}
+  .pill.removed{background:#eceff0;color:#52605c}
+
+  .ev{border:1px solid var(--border);border-radius:10px;padding:16px;margin-top:14px;background:#fff}
+  .ev h3{font-size:1.15rem}
+  .sub{display:grid;gap:4px 16px;grid-template-columns:auto 1fr;font-size:.97rem;margin:10px 0}
+  .sub dt{color:var(--soft)}
+  .sub dd{margin:0}
   .row-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
   table{border-collapse:collapse;width:100%;font-size:.97rem;margin-top:12px}
   th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--border);vertical-align:top}
   th{color:var(--soft);font-weight:700}
-  .addrow{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+  .addrow{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
   .addrow input{flex:1 1 240px;width:auto}
-  .center{max-width:460px;margin:60px auto}
   [hidden]{display:none!important}
-  .ev{border:1px solid var(--border);border-radius:10px;padding:16px;margin-top:14px;background:#fff}
-  .ev h3{font-size:1.15rem}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 </head>
@@ -57,7 +71,7 @@
 <header class="bar">
   <span class="title">WIN Admin</span>
   <span class="who" id="who" hidden></span>
-  <button class="btn-ghost" id="signout" hidden>Sign out</button>
+  <button class="btn-ghost" id="signout" hidden style="margin-left:12px">Sign out</button>
 </header>
 
 <!-- Loading -->
@@ -75,66 +89,109 @@
   </div>
 </div>
 
-<!-- Not authorized -->
+<!-- Denied -->
 <div class="wrap" id="view-denied" hidden>
   <div class="card center">
     <h2>Not authorized</h2>
-    <p class="muted" style="margin-top:.6em">You're signed in as <strong id="denied-email"></strong>, but that address isn't on the administrator list. If you think it should be, ask an existing admin to add you.</p>
+    <p class="muted" style="margin-top:.6em">You're signed in as <strong id="denied-email"></strong>, but that address isn't on the administrator list. Ask an existing admin to add you.</p>
     <div style="margin-top:14px"><button class="btn-ghost" id="signout2">Sign out</button></div>
   </div>
 </div>
 
-<!-- Admin panel -->
+<!-- Panel -->
 <div class="wrap" id="view-panel" hidden>
-
-  <h2 class="section-title">Event submissions <span class="count" id="ev-count"></span></h2>
-  <p class="muted" id="ev-empty" hidden>No submissions yet.</p>
-  <div id="ev-list"></div>
-
-  <h2 class="section-title">Mailing list <span class="count" id="su-count"></span></h2>
-  <p class="muted" id="su-empty" hidden>No sign-ups yet.</p>
-  <div id="su-wrap"></div>
-
-  <h2 class="section-title">Administrators</h2>
-  <p class="muted">People who can sign in here. Add or remove them below.</p>
-  <div id="ad-wrap"></div>
-  <div class="addrow">
-    <input id="ad-email" type="email" placeholder="new-admin@example.com">
-    <button class="btn-green" id="ad-add">Add admin</button>
+  <div class="tabs" role="tablist">
+    <button role="tab" data-tab="events" aria-selected="true">Events</button>
+    <button role="tab" data-tab="list" aria-selected="false">Mailing list</button>
+    <button role="tab" data-tab="admins" aria-selected="false">Administrators</button>
+    <button role="tab" data-tab="announce" aria-selected="false">Announcements</button>
   </div>
-  <p class="msg" id="ad-msg" hidden></p>
 
+  <!-- Events tab -->
+  <section data-panel="events">
+    <div class="panelhead"><h2>Event submissions</h2></div>
+    <div class="chips" id="ev-chips">
+      <button class="chip" data-filter="pending" aria-pressed="true">Pending</button>
+      <button class="chip" data-filter="approved" aria-pressed="false">Approved</button>
+      <button class="chip" data-filter="rejected" aria-pressed="false">Rejected</button>
+      <button class="chip" data-filter="all" aria-pressed="false">All</button>
+    </div>
+    <p class="muted" id="ev-empty" hidden style="margin-top:16px"></p>
+    <div id="ev-list"></div>
+  </section>
+
+  <!-- Mailing list tab -->
+  <section data-panel="list" hidden>
+    <div class="panelhead"><h2>Mailing list</h2></div>
+    <div class="chips" id="su-chips">
+      <button class="chip" data-filter="active" aria-pressed="true">Active</button>
+      <button class="chip" data-filter="removed" aria-pressed="false">Removed</button>
+      <button class="chip" data-filter="all" aria-pressed="false">All</button>
+    </div>
+    <p class="muted" id="su-empty" hidden style="margin-top:16px"></p>
+    <div id="su-wrap"></div>
+  </section>
+
+  <!-- Admins tab -->
+  <section data-panel="admins" hidden>
+    <div class="panelhead"><h2>Administrators</h2></div>
+    <p class="muted" style="margin-top:6px">People who can sign in here. Add or remove them below.</p>
+    <div id="ad-wrap"></div>
+    <div class="addrow">
+      <input id="ad-email" type="email" placeholder="new-admin@example.com">
+      <button class="btn-green" id="ad-add">Add admin</button>
+    </div>
+    <p class="msg" id="ad-msg" hidden></p>
+  </section>
+
+  <!-- Announcements tab -->
+  <section data-panel="announce" hidden>
+    <div class="panelhead"><h2>Send an announcement</h2></div>
+    <div class="card">
+      <p class="msg" style="margin-top:0">Email sending isn't connected yet. Once the email service is set up, this is where you'll write an announcement and send it to everyone on the active mailing list.</p>
+      <div style="margin-top:16px;opacity:.6">
+        <label for="an-subject">Subject</label>
+        <input id="an-subject" type="text" disabled placeholder="e.g. This Saturday: Interfaith Potluck">
+        <div style="height:12px"></div>
+        <label for="an-body">Message</label>
+        <textarea id="an-body" disabled placeholder="Write your announcement here…"></textarea>
+        <div style="margin-top:12px"><button class="btn-green" disabled>Send to mailing list</button></div>
+      </div>
+    </div>
+  </section>
 </div>
 
 <script>
 (function(){
   var SB_URL = "https://myrqbzlprhfkaxxiantf.supabase.co";
   var SB_KEY = "sb_publishable_35YzbcMvc_tddWJpVRMhBQ_wOThZLbI";
-  var sb = window.supabase.createClient(SB_URL, SB_KEY);
+  var sb = window.supabase.createClient(SB_URL, SB_KEY, {
+    auth: { flowType: 'implicit', detectSessionInUrl: true, persistSession: true, autoRefreshToken: true }
+  });
 
-  var me = null; // current user email
+  var me = null;
+  var allEvents = [], eventFilter = 'pending';
+  var allSignups = [], signupFilter = 'active';
 
   function show(id){
     ["view-loading","view-login","view-denied","view-panel"].forEach(function(v){
       var el = document.getElementById(v); if(el){ el.hidden = (v !== id); }
     });
   }
-  function esc(s){ return (s==null?"":String(s)).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+  function esc(s){ return (s==null?"":String(s)).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
   function fmtDate(s){ if(!s) return ""; try{ return new Date(s).toLocaleDateString(undefined,{year:'numeric',month:'short',day:'numeric'}); }catch(e){ return s; } }
 
-  // ---------- auth ----------
+  // ---- auth ----
   document.getElementById('sendlink').addEventListener('click', function(){
     var email = document.getElementById('email').value.trim();
     var m = document.getElementById('login-msg');
     if(!email){ m.hidden=false; m.className="msg err"; m.textContent="Please enter your email."; return; }
-    var btn = this; btn.disabled = true; btn.textContent = "Sending…";
-    sb.auth.signInWithOtp({ email: email, options: { emailRedirectTo: window.location.origin + window.location.pathname } })
-      .then(function(res){
-        btn.disabled = false; btn.textContent = "Send me a sign-in link";
-        m.hidden = false;
-        if(res.error){ m.className="msg err"; m.textContent = "Couldn't send the link: " + res.error.message; return; }
-        m.className = "msg"; m.textContent = "Check your email — we sent a sign-in link to " + email + ". Click it on this device.";
-      });
+    var btn=this; btn.disabled=true; btn.textContent="Sending…";
+    sb.auth.signInWithOtp({ email: email, options:{ emailRedirectTo: window.location.origin + window.location.pathname } }).then(function(res){
+      btn.disabled=false; btn.textContent="Send me a sign-in link"; m.hidden=false;
+      if(res.error){ m.className="msg err"; m.textContent="Couldn't send the link: "+res.error.message; return; }
+      m.className="msg"; m.textContent="Check your email — a sign-in link is on its way to "+email+".";
+    });
   });
   function signOut(){ sb.auth.signOut().then(function(){ location.reload(); }); }
   document.getElementById('signout').addEventListener('click', signOut);
@@ -144,136 +201,162 @@
     if(!session){ show('view-login'); return; }
     me = session.user && session.user.email ? session.user.email : null;
     sb.rpc('is_admin').then(function(res){
+      document.getElementById('signout').hidden = false;
       if(res.error || !res.data){
         document.getElementById('denied-email').textContent = me || "";
-        show('view-denied');
-        document.getElementById('who').hidden = true;
-        document.getElementById('signout').hidden = false;
-        return;
+        show('view-denied'); return;
       }
       document.getElementById('who').textContent = "Signed in as " + me;
       document.getElementById('who').hidden = false;
-      document.getElementById('signout').hidden = false;
       show('view-panel');
       loadEvents(); loadSignups(); loadAdmins();
     });
   }
-
   sb.auth.getSession().then(function(r){ start(r.data ? r.data.session : null); });
-  sb.auth.onAuthStateChange(function(_evt, session){
-    // only (re)start when moving in/out of signed-in; avoid loops
-    if(session && !me){ start(session); }
+  sb.auth.onAuthStateChange(function(_e, session){ if(session && !me){ start(session); } });
+
+  // ---- tabs ----
+  document.querySelector('.tabs').addEventListener('click', function(e){
+    var b = e.target.closest('button[data-tab]'); if(!b) return;
+    var tab = b.getAttribute('data-tab');
+    document.querySelectorAll('.tabs button').forEach(function(t){ t.setAttribute('aria-selected', t===b ? 'true':'false'); });
+    document.querySelectorAll('section[data-panel]').forEach(function(s){ s.hidden = (s.getAttribute('data-panel') !== tab); });
   });
 
-  // ---------- events ----------
+  // ---- events ----
   function loadEvents(){
-    var list = document.getElementById('ev-list');
-    list.innerHTML = "";
     sb.from('event_submissions').select('*').order('created_at',{ascending:false}).then(function(res){
-      if(res.error){ list.innerHTML = '<p class="msg err">Could not load submissions.</p>'; return; }
-      var rows = res.data || [];
-      document.getElementById('ev-count').textContent = "(" + rows.length + ")";
-      document.getElementById('ev-empty').hidden = rows.length > 0;
-      rows.forEach(function(ev){
-        var d = document.createElement('div'); d.className = "ev";
-        var status = ev.status || 'pending';
-        var flyer = ev.flyer_url ? '<dt>Flyer</dt><dd><a href="'+esc(ev.flyer_url)+'" target="_blank" rel="noopener">Open flyer</a></dd>' : '';
-        d.innerHTML =
-          '<div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start">'+
-            '<h3>'+esc(ev.event_name)+'</h3>'+
-            '<span class="pill '+esc(status)+'">'+esc(status)+'</span>'+
-          '</div>'+
-          '<dl class="sub">'+
-            (ev.event_date?'<dt>Date</dt><dd>'+esc(ev.event_date)+(ev.event_time?' · '+esc(ev.event_time):'')+'</dd>':'')+
-            (ev.location?'<dt>Location</dt><dd>'+esc(ev.location)+'</dd>':'')+
-            (ev.hosting_community?'<dt>Host</dt><dd>'+esc(ev.hosting_community)+'</dd>':'')+
-            (ev.description?'<dt>Details</dt><dd>'+esc(ev.description)+'</dd>':'')+
-            (ev.submitter_name||ev.submitter_email?'<dt>From</dt><dd>'+esc(ev.submitter_name||'')+(ev.submitter_email?' ('+esc(ev.submitter_email)+')':'')+'</dd>':'')+
-            flyer+
-            '<dt>Submitted</dt><dd>'+esc(fmtDate(ev.created_at))+'</dd>'+
-          '</dl>'+
-          '<div class="row-actions">'+
-            '<button class="btn-green" data-act="approve" data-id="'+esc(ev.id)+'">Approve</button>'+
-            '<button class="btn-ghost" data-act="pending" data-id="'+esc(ev.id)+'">Mark pending</button>'+
-            '<button class="btn-red" data-act="reject" data-id="'+esc(ev.id)+'">Reject</button>'+
-          '</div>';
-        list.appendChild(d);
-      });
+      allEvents = res.error ? [] : (res.data||[]); renderEvents();
     });
   }
+  function renderEvents(){
+    var list = document.getElementById('ev-list'); list.innerHTML = "";
+    // counts
+    var counts = {pending:0,approved:0,rejected:0};
+    allEvents.forEach(function(ev){ var s=ev.status||'pending'; if(counts[s]!=null) counts[s]++; });
+    document.querySelectorAll('#ev-chips .chip').forEach(function(c){
+      var f=c.getAttribute('data-filter');
+      var base = f.charAt(0).toUpperCase()+f.slice(1);
+      c.textContent = f==='all' ? ('All ('+allEvents.length+')') : (base+' ('+(counts[f]||0)+')');
+      c.setAttribute('aria-pressed', f===eventFilter ? 'true':'false');
+    });
+    var rows = allEvents.filter(function(ev){ return eventFilter==='all' ? true : (ev.status||'pending')===eventFilter; });
+    var empty = document.getElementById('ev-empty');
+    if(!rows.length){ empty.hidden=false; empty.textContent = "No "+(eventFilter==='all'?'':eventFilter+' ')+"events."; return; }
+    empty.hidden = true;
+    rows.forEach(function(ev){
+      var status = ev.status||'pending';
+      var d = document.createElement('div'); d.className="ev";
+      d.innerHTML =
+        '<div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start">'+
+          '<h3>'+esc(ev.event_name)+'</h3><span class="pill '+esc(status)+'">'+esc(status)+'</span></div>'+
+        '<dl class="sub">'+
+          (ev.event_date?'<dt>Date</dt><dd>'+esc(ev.event_date)+(ev.event_time?' · '+esc(ev.event_time):'')+'</dd>':'')+
+          (ev.location?'<dt>Location</dt><dd>'+esc(ev.location)+'</dd>':'')+
+          (ev.hosting_community?'<dt>Host</dt><dd>'+esc(ev.hosting_community)+'</dd>':'')+
+          (ev.description?'<dt>Details</dt><dd>'+esc(ev.description)+'</dd>':'')+
+          (ev.submitter_name||ev.submitter_email?'<dt>From</dt><dd>'+esc(ev.submitter_name||'')+(ev.submitter_email?' ('+esc(ev.submitter_email)+')':'')+'</dd>':'')+
+          (ev.flyer_url?'<dt>Flyer</dt><dd><a href="'+esc(ev.flyer_url)+'" target="_blank" rel="noopener">Open flyer</a></dd>':'')+
+          '<dt>Submitted</dt><dd>'+esc(fmtDate(ev.created_at))+'</dd>'+
+        '</dl>'+
+        '<div class="row-actions">'+
+          (status!=='approved'?'<button class="btn-green" data-act="approved" data-id="'+esc(ev.id)+'">Approve</button>':'')+
+          (status!=='pending'?'<button class="btn-ghost" data-act="pending" data-id="'+esc(ev.id)+'">Mark pending</button>':'')+
+          (status!=='rejected'?'<button class="btn-red" data-act="rejected" data-id="'+esc(ev.id)+'">Reject</button>':'')+
+        '</div>';
+      list.appendChild(d);
+    });
+  }
+  document.getElementById('ev-chips').addEventListener('click', function(e){
+    var c = e.target.closest('.chip'); if(!c) return;
+    eventFilter = c.getAttribute('data-filter'); renderEvents();
+  });
   document.getElementById('ev-list').addEventListener('click', function(e){
     var b = e.target.closest('button[data-act]'); if(!b) return;
-    var map = { approve:'approved', reject:'rejected', pending:'pending' };
-    var status = map[b.getAttribute('data-act')];
     b.disabled = true;
-    sb.from('event_submissions').update({status:status}).eq('id', b.getAttribute('data-id')).then(function(res){
+    sb.from('event_submissions').update({status:b.getAttribute('data-act')}).eq('id', b.getAttribute('data-id')).then(function(res){
       if(res.error){ b.disabled=false; alert("Update failed."); return; }
       loadEvents();
     });
   });
 
-  // ---------- signups ----------
+  // ---- mailing list ----
   function loadSignups(){
-    var wrap = document.getElementById('su-wrap'); wrap.innerHTML = "";
     sb.from('signups').select('*').order('created_at',{ascending:false}).then(function(res){
-      if(res.error){ wrap.innerHTML = '<p class="msg err">Could not load sign-ups.</p>'; return; }
-      var rows = res.data || [];
-      document.getElementById('su-count').textContent = "(" + rows.length + ")";
-      document.getElementById('su-empty').hidden = rows.length > 0;
-      if(!rows.length) return;
-      var html = '<table><thead><tr><th>Name</th><th>Email</th><th>Affiliation</th><th>Joined</th><th></th></tr></thead><tbody>';
-      rows.forEach(function(s){
-        html += '<tr><td>'+esc(s.name||'')+'</td><td>'+esc(s.email)+'</td><td>'+esc(s.religious_affiliation||'')+'</td><td>'+esc(fmtDate(s.created_at))+'</td>'+
-                '<td><button class="btn-ghost" data-del="'+esc(s.id)+'">Remove</button></td></tr>';
-      });
-      html += '</tbody></table>';
-      wrap.innerHTML = html;
+      allSignups = res.error ? [] : (res.data||[]); renderSignups();
     });
   }
+  function renderSignups(){
+    var wrap = document.getElementById('su-wrap'); wrap.innerHTML="";
+    var counts = {active:0,removed:0};
+    allSignups.forEach(function(s){ var st=s.status||'active'; if(counts[st]!=null) counts[st]++; });
+    document.querySelectorAll('#su-chips .chip').forEach(function(c){
+      var f=c.getAttribute('data-filter'); var base=f.charAt(0).toUpperCase()+f.slice(1);
+      c.textContent = f==='all' ? ('All ('+allSignups.length+')') : (base+' ('+(counts[f]||0)+')');
+      c.setAttribute('aria-pressed', f===signupFilter ? 'true':'false');
+    });
+    var rows = allSignups.filter(function(s){ return signupFilter==='all' ? true : (s.status||'active')===signupFilter; });
+    var empty = document.getElementById('su-empty');
+    if(!rows.length){ empty.hidden=false; empty.textContent = "No "+(signupFilter==='all'?'':signupFilter+' ')+"sign-ups."; return; }
+    empty.hidden=true;
+    var html = '<table><thead><tr><th>Name</th><th>Email</th><th>Affiliation</th><th>Joined</th><th>Status</th><th></th></tr></thead><tbody>';
+    rows.forEach(function(s){
+      var st = s.status||'active';
+      var action = st==='removed'
+        ? '<button class="btn-ghost" data-restore="'+esc(s.id)+'">Restore</button>'
+        : '<button class="btn-ghost" data-remove="'+esc(s.id)+'">Remove</button>';
+      html += '<tr><td>'+esc(s.name||'')+'</td><td>'+esc(s.email)+'</td><td>'+esc(s.religious_affiliation||'')+'</td><td>'+esc(fmtDate(s.created_at))+'</td>'+
+              '<td><span class="pill '+esc(st)+'">'+esc(st)+'</span></td><td>'+action+'</td></tr>';
+    });
+    html += '</tbody></table>';
+    wrap.innerHTML = html;
+  }
+  document.getElementById('su-chips').addEventListener('click', function(e){
+    var c=e.target.closest('.chip'); if(!c) return; signupFilter=c.getAttribute('data-filter'); renderSignups();
+  });
   document.getElementById('su-wrap').addEventListener('click', function(e){
-    var b = e.target.closest('button[data-del]'); if(!b) return;
-    if(!confirm("Remove this sign-up?")) return;
-    b.disabled = true;
-    sb.from('signups').delete().eq('id', b.getAttribute('data-del')).then(function(res){
-      if(res.error){ b.disabled=false; alert("Remove failed."); return; }
+    var rem=e.target.closest('button[data-remove]'), res2=e.target.closest('button[data-restore]');
+    var b = rem||res2; if(!b) return;
+    var id = b.getAttribute('data-remove') || b.getAttribute('data-restore');
+    var newStatus = rem ? 'removed' : 'active';
+    b.disabled=true;
+    sb.from('signups').update({status:newStatus}).eq('id', id).then(function(r){
+      if(r.error){ b.disabled=false; alert("Update failed."); return; }
       loadSignups();
     });
   });
 
-  // ---------- admins ----------
+  // ---- admins ----
   function loadAdmins(){
-    var wrap = document.getElementById('ad-wrap'); wrap.innerHTML = "";
+    var wrap=document.getElementById('ad-wrap'); wrap.innerHTML="";
     sb.from('admins').select('*').order('added_at',{ascending:true}).then(function(res){
-      if(res.error){ wrap.innerHTML = '<p class="msg err">Could not load admins.</p>'; return; }
-      var rows = res.data || [];
-      var html = '<table><thead><tr><th>Email</th><th>Added</th><th></th></tr></thead><tbody>';
+      if(res.error){ wrap.innerHTML='<p class="msg err">Could not load admins.</p>'; return; }
+      var rows=res.data||[];
+      var html='<table><thead><tr><th>Email</th><th>Added</th><th></th></tr></thead><tbody>';
       rows.forEach(function(a){
-        var isSelf = (a.email === me);
-        html += '<tr><td>'+esc(a.email)+(isSelf?' <span class="muted">(you)</span>':'')+'</td><td>'+esc(fmtDate(a.added_at))+'</td>'+
-                '<td>'+(isSelf?'':'<button class="btn-ghost" data-deladmin="'+esc(a.email)+'">Remove</button>')+'</td></tr>';
+        var isSelf=(a.email===me);
+        html+='<tr><td>'+esc(a.email)+(isSelf?' <span class="muted">(you)</span>':'')+'</td><td>'+esc(fmtDate(a.added_at))+'</td>'+
+              '<td>'+(isSelf?'':'<button class="btn-ghost" data-deladmin="'+esc(a.email)+'">Remove</button>')+'</td></tr>';
       });
-      html += '</tbody></table>';
-      wrap.innerHTML = html;
+      html+='</tbody></table>'; wrap.innerHTML=html;
     });
   }
   document.getElementById('ad-add').addEventListener('click', function(){
-    var inp = document.getElementById('ad-email'); var email = inp.value.trim().toLowerCase();
-    var m = document.getElementById('ad-msg');
+    var inp=document.getElementById('ad-email'); var email=inp.value.trim().toLowerCase();
+    var m=document.getElementById('ad-msg');
     if(!email){ m.hidden=false; m.className="msg err"; m.textContent="Enter an email to add."; return; }
-    this.disabled = true;
+    this.disabled=true;
     sb.from('admins').insert({email:email}).then(function(res){
-      document.getElementById('ad-add').disabled = false;
-      m.hidden = false;
-      if(res.error){ m.className="msg err"; m.textContent="Could not add: " + res.error.message; return; }
-      m.className="msg"; m.textContent="Added " + email + ". They can now sign in with that email.";
-      inp.value = ""; loadAdmins();
+      document.getElementById('ad-add').disabled=false; m.hidden=false;
+      if(res.error){ m.className="msg err"; m.textContent="Could not add: "+res.error.message; return; }
+      m.className="msg"; m.textContent="Added "+email+". They can sign in with that email now."; inp.value=""; loadAdmins();
     });
   });
   document.getElementById('ad-wrap').addEventListener('click', function(e){
-    var b = e.target.closest('button[data-deladmin]'); if(!b) return;
-    var email = b.getAttribute('data-deladmin');
-    if(!confirm("Remove admin access for " + email + "?")) return;
-    b.disabled = true;
+    var b=e.target.closest('button[data-deladmin]'); if(!b) return;
+    var email=b.getAttribute('data-deladmin');
+    if(!confirm("Remove admin access for "+email+"?")) return;
+    b.disabled=true;
     sb.from('admins').delete().eq('email', email).then(function(res){
       if(res.error){ b.disabled=false; alert("Remove failed."); return; }
       loadAdmins();
