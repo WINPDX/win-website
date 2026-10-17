@@ -896,20 +896,39 @@
         if(!sb){ setMsg(eventForm, "Can't reach the database from this preview — this works on the live site."); return; }
         var btn = eventForm.querySelector('button[type="submit"]'); var label = btn ? btn.textContent : '';
         if(btn){ btn.disabled = true; btn.textContent = "Submitting…"; }
-        sb.from('event_submissions').insert({
-          event_name: name,
-          event_date: val(eventForm,'#ev-date') || null,
-          event_time: val(eventForm,'#ev-time') || null,
-          location: val(eventForm,'#ev-loc') || null,
-          hosting_community: val(eventForm,'#ev-host') || null,
-          description: val(eventForm,'#ev-desc') || null,
-          submitter_name: val(eventForm,'#ev-your-name') || null,
-          submitter_email: val(eventForm,'#ev-your-email') || null
-        }).then(function(res){
+
+        function saveRow(flyerUrl){
+          sb.from('event_submissions').insert({
+            event_name: name,
+            event_date: val(eventForm,'#ev-date') || null,
+            event_time: val(eventForm,'#ev-time') || null,
+            location: val(eventForm,'#ev-loc') || null,
+            hosting_community: val(eventForm,'#ev-host') || null,
+            description: val(eventForm,'#ev-desc') || null,
+            submitter_name: val(eventForm,'#ev-your-name') || null,
+            submitter_email: val(eventForm,'#ev-your-email') || null,
+            flyer_url: flyerUrl || null
+          }).then(function(res){
             if(res.error){ setMsg(eventForm, "Sorry, something went wrong — please try again, or email us."); if(btn){ btn.disabled = false; btn.textContent = label; } return; }
             eventForm.reset(); if(btn){ btn.textContent = "Submitted ✓"; }
-            setMsg(eventForm, "Thank you! Your event was sent to the steering committee for review. (Flyer upload is coming soon.)");
+            setMsg(eventForm, "Thank you! Your event was sent to the steering committee for review.");
           });
+        }
+
+        var fileInput = eventForm.querySelector('#ev-flyer');
+        var file = fileInput && fileInput.files && fileInput.files[0];
+        if(file){
+          if(file.size > 10 * 1024 * 1024){ setMsg(eventForm, "That flyer is over 10 MB — please choose a smaller image."); if(btn){ btn.disabled = false; btn.textContent = label; } return; }
+          var ext = (file.name.split('.').pop() || 'img').toLowerCase().replace(/[^a-z0-9]/g, '').slice(0, 5);
+          var path = Date.now() + '-' + Math.random().toString(36).slice(2, 8) + '.' + ext;
+          sb.storage.from('flyers').upload(path, file).then(function(up){
+            if(up.error){ setMsg(eventForm, "Couldn't upload the flyer — please try again, or submit without one."); if(btn){ btn.disabled = false; btn.textContent = label; } return; }
+            var pub = sb.storage.from('flyers').getPublicUrl(path);
+            saveRow(pub && pub.data ? pub.data.publicUrl : null);
+          });
+        } else {
+          saveRow(null);
+        }
       });
     }
 
