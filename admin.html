@@ -105,7 +105,6 @@
   <div class="tabs" role="tablist">
     <button role="tab" data-tab="events" aria-selected="true">Events</button>
     <button role="tab" data-tab="list" aria-selected="false">Mailing list</button>
-    <button role="tab" data-tab="messages" aria-selected="false">Messages</button>
     <button role="tab" data-tab="admins" aria-selected="false">Administrators</button>
     <button role="tab" data-tab="announce" aria-selected="false">Announcements</button>
   </div>
@@ -133,18 +132,6 @@
     </div>
     <p class="muted" id="su-empty" hidden style="margin-top:16px"></p>
     <div id="su-wrap"></div>
-  </section>
-
-  <!-- Messages tab -->
-  <section data-panel="messages" hidden>
-    <div class="panelhead"><h2>Messages from the website</h2></div>
-    <div class="chips" id="ms-chips">
-      <button class="chip" data-filter="new" aria-pressed="true">New</button>
-      <button class="chip" data-filter="handled" aria-pressed="false">Handled</button>
-      <button class="chip" data-filter="all" aria-pressed="false">All</button>
-    </div>
-    <p class="muted" id="ms-empty" hidden style="margin-top:16px"></p>
-    <div id="ms-list"></div>
   </section>
 
   <!-- Admins tab -->
@@ -187,7 +174,6 @@
   var me = null;
   var allEvents = [], eventFilter = 'pending';
   var allSignups = [], signupFilter = 'active';
-  var allMessages = [], messageFilter = 'new';
 
   function show(id){
     ["view-loading","view-login","view-denied","view-panel"].forEach(function(v){
@@ -225,7 +211,7 @@
       document.getElementById('who').textContent = "Signed in as " + me;
       document.getElementById('who').hidden = false;
       show('view-panel');
-      loadEvents(); loadSignups(); loadAdmins(); loadMessages();
+      loadEvents(); loadSignups(); loadAdmins();
     });
   }
   sb.auth.getSession().then(function(r){ start(r.data ? r.data.session : null); });
@@ -379,56 +365,6 @@
     });
   });
 
-  // ---- messages ----
-  function loadMessages(){
-    sb.from('messages').select('*').order('created_at',{ascending:false}).then(function(res){
-      allMessages = res.error ? [] : (res.data||[]); renderMessages();
-    });
-  }
-  function renderMessages(){
-    var list = document.getElementById('ms-list'); list.innerHTML="";
-    var counts = {new:0,handled:0};
-    allMessages.forEach(function(m){ var st=m.status||'new'; if(counts[st]!=null) counts[st]++; });
-    document.querySelectorAll('#ms-chips .chip').forEach(function(c){
-      var f=c.getAttribute('data-filter'); var base=f.charAt(0).toUpperCase()+f.slice(1);
-      c.textContent = f==='all' ? ('All ('+allMessages.length+')') : (base+' ('+(counts[f]||0)+')');
-      c.setAttribute('aria-pressed', f===messageFilter ? 'true':'false');
-    });
-    var tabBtn = document.querySelector('.tabs button[data-tab="messages"]');
-    if(tabBtn){ tabBtn.textContent = counts.new ? ('Messages ('+counts.new+')') : 'Messages'; }
-    var rows = allMessages.filter(function(m){ return messageFilter==='all' ? true : (m.status||'new')===messageFilter; });
-    var empty = document.getElementById('ms-empty');
-    if(!rows.length){ empty.hidden=false; empty.textContent = "No "+(messageFilter==='all'?'':messageFilter+' ')+"messages."; return; }
-    empty.hidden=true;
-    rows.forEach(function(m){
-      var st=m.status||'new';
-      var d=document.createElement('div'); d.className="ev";
-      d.innerHTML =
-        '<div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start">'+
-          '<h3>'+esc(m.name||'(no name given)')+'</h3><span class="pill '+esc(st)+'">'+esc(st)+'</span></div>'+
-        '<dl class="sub">'+
-          (m.email?'<dt>Email</dt><dd><a href="mailto:'+esc(m.email)+'">'+esc(m.email)+'</a></dd>':'')+
-          '<dt>Received</dt><dd>'+esc(fmtDate(m.created_at))+'</dd>'+
-        '</dl>'+
-        '<div style="white-space:pre-wrap;background:#f7f5f0;border:1px solid var(--border);border-radius:9px;padding:12px 14px;margin-top:4px">'+esc(m.message||'')+'</div>'+
-        '<div class="row-actions">'+
-          (st!=='handled'?'<button class="btn-green" data-mact="handled" data-id="'+esc(m.id)+'">Mark handled</button>':'')+
-          (st!=='new'?'<button class="btn-ghost" data-mact="new" data-id="'+esc(m.id)+'">Mark new</button>':'')+
-        '</div>';
-      list.appendChild(d);
-    });
-  }
-  document.getElementById('ms-chips').addEventListener('click', function(e){
-    var c=e.target.closest('.chip'); if(!c) return; messageFilter=c.getAttribute('data-filter'); renderMessages();
-  });
-  document.getElementById('ms-list').addEventListener('click', function(e){
-    var b=e.target.closest('button[data-mact]'); if(!b) return;
-    b.disabled=true;
-    sb.from('messages').update({status:b.getAttribute('data-mact')}).eq('id', b.getAttribute('data-id')).then(function(res){
-      if(res.error){ b.disabled=false; alert("Update failed."); return; }
-      loadMessages();
-    });
-  });
 })();
 </script>
 </body>
