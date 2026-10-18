@@ -75,7 +75,7 @@
 
   /* Dark header */
   header.site{background:var(--header-bg);color:var(--header-ink)}
-  header.site .wrap{display:flex;flex-wrap:wrap;align-items:center;gap:10px 22px;padding-block:14px}
+  header.site .wrap{display:flex;flex-wrap:wrap;align-items:center;gap:10px 22px;padding-block:14px;position:relative}
   .logo{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--header-ink)}
   .logo .mark{width:44px;height:44px;flex:none;display:grid;place-items:center}
   .logo .name{font-family:var(--font-display);font-weight:700;font-size:1.5rem;line-height:1;letter-spacing:.06em}
@@ -299,10 +299,9 @@
     .cols-2{grid-template-columns:1fr}
     .showup{grid-template-columns:1fr}
     .navtoggle{display:block}
-    nav.main{margin-left:0;width:100%;order:3}
-    nav.main ul{display:none;flex-direction:column;gap:3px;width:max-content;max-width:72%;margin-left:auto;padding-top:8px}
+    nav.main ul{display:none;position:absolute;top:calc(100% + 4px);right:max(16px,env(safe-area-inset-right,0px));flex-direction:column;gap:3px;min-width:190px;background:var(--header-bg);border:1px solid rgba(255,255,255,.18);border-radius:12px;padding:8px;box-shadow:0 14px 34px rgba(0,0,0,.45);z-index:60}
     nav.main.open ul{display:flex}
-    nav.main a{display:block;padding:11px 18px;font-size:1.1rem;border-radius:10px;text-align:right}
+    nav.main a{display:block;padding:11px 16px;font-size:1.08rem;border-radius:9px}
   }
 </style>
 
