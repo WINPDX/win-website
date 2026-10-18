@@ -353,16 +353,6 @@
 
           <article class="note">
             <span class="pin" aria-hidden="true"></span>
-            <p><span class="chip-date">Fri · Apr 18</span></p>
-            <h3>IMIrJ Action Assembly</h3>
-            <p class="note-time">9:00 AM – 3:00 PM</p>
-            <p>Rising together for immigration &amp; housing justice.</p>
-            <hr class="divider">
-            <p class="script">All are welcome</p>
-          </article>
-
-          <article class="note">
-            <span class="pin" aria-hidden="true"></span>
             <p><span class="chip-date">Every month · 3rd Sat</span></p>
             <h3>Silent Interfaith March</h3>
             <p class="note-time">4:00 PM · Elizabeth Carruthers Park</p>
@@ -388,16 +378,7 @@
             <p class="script">Help guide the work</p>
           </article>
 
-          <article class="note">
-            <span class="pin" aria-hidden="true"></span>
-            <p><span class="chip-date">Tue · Jul 14</span></p>
-            <h3>Race Unity Day</h3>
-            <p class="note-time">Beaverton Bahá'í Center</p>
-            <hr class="divider">
-            <p class="script">Our annual gathering</p>
-          </article>
-
-          <a class="note add" href="#events" data-nav="events">
+          <a class="note add" id="board-add" href="#events" data-nav="events">
             <p class="script">➕ Pin your event here</p>
           </a>
 
@@ -570,17 +551,8 @@
         </div>
 
         <h2 class="ruled" style="margin-top:2em">What's coming up</h2>
-        <p class="ph-note">Example events shown as placeholders until the next real gatherings are added.</p>
-        <div class="ev-list">
-          <div class="ev-card">
-            <h3>Interfaith Thanksgiving Potluck</h3>
-            <p class="meta">November 22, 2026 · 5:00 PM · Cedar Hills United Church of Christ · Share a dish and gratitude across traditions.</p>
-          </div>
-          <div class="ev-card">
-            <h3>Winter Lights Gathering</h3>
-            <p class="meta">December 13, 2026 · 6:00 PM · Beaverton Bahá'í Center · Celebrating light across our faith traditions.</p>
-          </div>
-        </div>
+        <div class="ev-list" id="upcoming-list"></div>
+        <p class="muted" id="upcoming-empty" hidden style="margin-top:4px">No upcoming events are posted right now — check back soon, or submit one below.</p>
 
         <h2 class="ruled" style="margin-top:2em">Every month</h2>
         <div class="ev-list">
@@ -602,6 +574,7 @@
         </div>
 
         <h2 class="ruled" style="margin-top:2em">Where we've been</h2>
+        <div class="ev-list" id="past-list" style="margin-bottom:10px"></div>
         <div class="flyers">
           <img class="flyer-img" src="images/bilal_potluck.jpg" alt="Interfaith Potluck flyer, January 2026, Bilal Masjid">
           <img class="flyer-img" src="images/thanksgiving.jpg" alt="Thanks-giving Interfaith Prayer Service flyer, October 2025">
@@ -949,6 +922,54 @@
           });
       });
     }
+
+    // ---- public: show approved events (auto upcoming/past) ----
+    function pubEsc(s){ return (s==null?'':String(s)).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+    function pubParse(d){ if(!d) return null; var p=String(d).split('-'); if(p.length!==3) return null; var dt=new Date(+p[0],+p[1]-1,+p[2]); return isNaN(dt)?null:dt; }
+    function pubDate(d, withYear){ var dt=pubParse(d); if(!dt) return d||''; var o={weekday:'short',month:'short',day:'numeric'}; if(withYear) o.year='numeric'; return dt.toLocaleDateString(undefined,o); }
+    function evMeta(e, withYear){ return [pubDate(e.event_date,withYear), e.event_time, e.location, e.hosting_community, e.description].filter(Boolean).map(pubEsc).join(' · '); }
+    function renderBoard(rows){
+      var notes = document.querySelector('#home .notes'), addNote = document.getElementById('board-add');
+      if(!notes || !addNote) return;
+      rows.forEach(function(e){
+        var art = document.createElement('article'); art.className='note';
+        var timeLoc = [e.event_time, e.location].filter(Boolean).map(pubEsc).join(' · ');
+        art.innerHTML =
+          '<span class="pin" aria-hidden="true"></span>'+
+          (e.event_date ? '<p><span class="chip-date">'+pubEsc(pubDate(e.event_date,false))+'</span></p>' : '')+
+          '<h3>'+pubEsc(e.event_name)+'</h3>'+
+          (timeLoc ? '<p class="note-time">'+timeLoc+'</p>' : '')+
+          (e.description ? '<p>'+pubEsc(e.description)+'</p>' : '')+
+          (e.hosting_community ? '<hr class="divider"><p class="script">'+pubEsc(e.hosting_community)+'</p>' : '');
+        notes.insertBefore(art, addNote);
+      });
+    }
+    function renderCards(id, rows, withYear){
+      var list = document.getElementById(id); if(!list) return;
+      list.innerHTML='';
+      rows.forEach(function(e){
+        var card = document.createElement('div'); card.className='ev-card';
+        var meta = evMeta(e, withYear);
+        card.innerHTML = '<h3>'+pubEsc(e.event_name)+'</h3>'+(meta?'<p class="meta">'+meta+'</p>':'');
+        list.appendChild(card);
+      });
+    }
+    function loadApprovedEvents(){
+      if(!sb) return;
+      sb.from('public_events').select('*').then(function(res){
+        if(res.error || !res.data) return;
+        var today = new Date(); today.setHours(0,0,0,0);
+        var upcoming=[], past=[];
+        res.data.forEach(function(e){ var dt=pubParse(e.event_date); if(dt && dt<today) past.push(e); else upcoming.push(e); });
+        upcoming.sort(function(a,b){ return String(a.event_date||'9999').localeCompare(String(b.event_date||'9999')); });
+        past.sort(function(a,b){ return String(b.event_date||'').localeCompare(String(a.event_date||'')); });
+        renderBoard(upcoming);
+        renderCards('upcoming-list', upcoming, true);
+        var ue = document.getElementById('upcoming-empty'); if(ue) ue.hidden = upcoming.length>0;
+        renderCards('past-list', past, true);
+      });
+    }
+    loadApprovedEvents();
   })();
 </script>
 
