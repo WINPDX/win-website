@@ -717,7 +717,7 @@
           <p>Education is where WIN grows. The steering committee is planning more opportunities for communities to share their traditions — workshops, shared meals with teaching moments, and events where your questions are the point.</p>
           <p>Have an idea for an educational event? A tradition you'd like to share? A question you've always wanted to ask?</p>
         </div>
-        <div class="callout"><strong>Email us at</strong> <a href="#contact" data-nav="contact">westsideinterfaithneighborspdx@gmail.com</a></div>
+        <div class="callout"><strong>Questions?</strong> <a href="#contact" data-nav="contact" data-scroll="contact-form">Send us a message →</a></div>
       </div>
     </section>
   </article>
@@ -744,7 +744,7 @@
           <p>The steering committee is always looking for the next way to show up. Service projects come from the community — someone sees a need, brings it to the group, and we figure out how to help together.</p>
           <p>Have an idea? Know a neighbor who needs a hand? A community project we could join?</p>
         </div>
-        <div class="callout"><p><strong>Email us at</strong> <a href="#contact" data-nav="contact">westsideinterfaithneighborspdx@gmail.com</a></p><p style="margin-top:.5em">Service events appear on our events calendar. <a href="#events" data-nav="events">See events →</a></p></div>
+        <div class="callout"><p><strong>Want to help?</strong> <a href="#contact" data-nav="contact" data-scroll="contact-form">Send us a message →</a></p><p style="margin-top:.5em">Service events appear on our events calendar. <a href="#events" data-nav="events">See events →</a></p></div>
       </div>
     </section>
   </article>
@@ -756,7 +756,6 @@
         <h1 tabindex="-1">Contact</h1>
         <p class="subitalic" style="font-style:normal;color:var(--ink-soft)">Questions, ideas, or just want to say hello? We read every email.</p>
         <p style="margin-top:1em;color:var(--ink-soft);max-width:62ch">Westside Interfaith Neighbors is a coalition of 14 faith communities on Portland's westside. We gather for potlucks, prayer services, education, and service — and we'd love to hear from you.</p>
-        <p style="margin-top:1.2em"><a class="email" style="font-size:1.25rem" href="#contact" data-nav="contact">westsideinterfaithneighborspdx@gmail.com</a></p>
 
         <div class="share-card" style="margin-top:2em">
           <h2>Join our announcement list</h2>
@@ -786,7 +785,7 @@
           <p style="margin-top:.6em">In person and online. Open to anyone who wants to help guide the work.</p>
         </div>
 
-        <div class="share-card" style="margin-top:2em">
+        <div class="share-card" id="contact-form" style="margin-top:2em">
           <h2>Drop us a note</h2>
           <form class="cform" id="contactForm" style="margin-top:16px">
             <div class="row2">
@@ -808,7 +807,6 @@
 <footer class="site">
   <div class="wrap">
     <p class="copy">© 2026 Westside Interfaith Neighbors · Portland Westside, Oregon</p>
-    <p><a href="#contact" data-nav="contact">westsideinterfaithneighborspdx@gmail.com</a></p>
     <nav aria-label="Footer">
       <ul>
         <li><a href="#home" data-nav="home">Home</a></li>
@@ -826,6 +824,7 @@
 <script>
   (function(){
     var pages = ["home","about","events","education","service","contact"];
+    var pendingScroll = null;
     function show(name){
       if(pages.indexOf(name) === -1){ name = "home"; }
       pages.forEach(function(p){
@@ -837,9 +836,15 @@
         else { a.removeAttribute('aria-current'); }
       });
       var active = document.getElementById(name);
-      var h1 = active ? active.querySelector('h1') : null;
-      window.scrollTo(0,0);
-      if(h1){ try{ h1.focus(); }catch(e){} }
+      var target = pendingScroll ? document.getElementById(pendingScroll) : null;
+      pendingScroll = null;
+      if(target){
+        try{ target.scrollIntoView({behavior:'smooth', block:'start'}); }catch(e){ window.scrollTo(0,0); }
+      } else {
+        window.scrollTo(0,0);
+        var h1 = active ? active.querySelector('h1') : null;
+        if(h1){ try{ h1.focus(); }catch(e){} }
+      }
     }
     function fromHash(){ show((location.hash||"").replace(/^#/,'') || "home"); }
     document.addEventListener('click', function(e){
@@ -848,6 +853,7 @@
       var name = a.getAttribute('data-nav');
       if(pages.indexOf(name) === -1){ return; }
       e.preventDefault();
+      var sc = a.getAttribute('data-scroll'); if(sc){ pendingScroll = sc; }
       if(location.hash !== '#'+name){ location.hash = name; } else { show(name); }
     });
     window.addEventListener('hashchange', fromHash);
@@ -926,15 +932,23 @@
       });
     }
 
-    // Contact message forms stay preview-only until email is wired up
-    document.querySelectorAll('form.cform').forEach(function(form){
-      if(form.id === 'joinForm' || form.id === 'eventForm'){ return; }
-      form.addEventListener('submit', function(e){
+    var contactForm = document.getElementById('contactForm');
+    if(contactForm){
+      contactForm.addEventListener('submit', function(e){
         e.preventDefault();
-        setMsg(form, "Thanks! Message sending isn't connected yet — for now, please email westsideinterfaithneighborspdx@gmail.com.");
-        var btn = form.querySelector('button[type="submit"]'); if(btn){ btn.textContent = "Message ready"; }
+        var msg = val(contactForm, '#cf-msg');
+        if(!msg){ setMsg(contactForm, "Please enter a message."); return; }
+        if(!sb){ setMsg(contactForm, "Can't reach the database from this preview — this works on the live site."); return; }
+        var btn = contactForm.querySelector('button[type="submit"]'); var label = btn ? btn.textContent : '';
+        if(btn){ btn.disabled = true; btn.textContent = "Sending…"; }
+        sb.from('messages').insert({ name: val(contactForm,'#cf-name') || null, email: val(contactForm,'#cf-email') || null, message: msg })
+          .then(function(res){
+            if(res.error){ setMsg(contactForm, "Sorry, something went wrong — please try again."); if(btn){ btn.disabled=false; btn.textContent=label; } return; }
+            contactForm.reset(); if(btn){ btn.textContent = "Sent ✓"; }
+            setMsg(contactForm, "Thank you! We got your note and will be in touch.");
+          });
       });
-    });
+    }
   })();
 </script>
 
