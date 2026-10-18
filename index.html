@@ -300,9 +300,9 @@
     .showup{grid-template-columns:1fr}
     .navtoggle{display:block}
     nav.main{margin-left:0;width:100%;order:3}
-    nav.main ul{display:none;flex-direction:column;gap:3px;width:100%;padding-top:8px}
+    nav.main ul{display:none;flex-direction:column;gap:3px;width:max-content;max-width:72%;margin-left:auto;padding-top:8px}
     nav.main.open ul{display:flex}
-    nav.main a{display:block;padding:12px 14px;font-size:1.12rem;border-radius:10px}
+    nav.main a{display:block;padding:11px 18px;font-size:1.1rem;border-radius:10px;text-align:right}
   }
 </style>
 
@@ -383,7 +383,7 @@
             <p class="script">Help guide the work</p>
           </article>
 
-          <a class="note add" id="board-add" href="#events" data-nav="events">
+          <a class="note add" id="board-add" href="#events" data-nav="events" data-scroll="event-form">
             <p class="script">➕ Pin your event here</p>
           </a>
 
@@ -620,7 +620,7 @@
           </table>
         </div>
 
-        <div class="share-card" style="margin-top:2em">
+        <div class="share-card" id="event-form" style="margin-top:2em">
           <h2>Submit a community event</h2>
           <p style="margin-top:.5em;color:var(--ink-soft)">The steering committee reviews every submission and adds approved events to the calendar. Upload your own flyer if you have one.</p>
           <form class="cform" id="eventForm" style="margin-top:18px">
