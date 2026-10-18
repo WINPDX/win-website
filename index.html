@@ -84,6 +84,7 @@
   nav.main a{display:inline-block;text-decoration:none;color:var(--header-ink);font-weight:600;font-size:1.05rem;padding:8px 15px;border-radius:999px}
   nav.main a:hover{background:rgba(255,255,255,.14)}
   nav.main a[aria-current="page"]{background:var(--win-green);color:#08130e}
+  .navtoggle{display:none;background:transparent;border:1px solid rgba(255,255,255,.4);color:var(--header-ink);font-size:1.6rem;line-height:1;padding:3px 13px;border-radius:9px;cursor:pointer;margin-left:auto}
 
   main{display:block}
   .page{padding:0}
@@ -297,8 +298,11 @@
     .cols-3{grid-template-columns:1fr}
     .cols-2{grid-template-columns:1fr}
     .showup{grid-template-columns:1fr}
-    nav.main{margin-left:0;width:100%}
-    nav.main ul{justify-content:flex-start}
+    .navtoggle{display:block}
+    nav.main{margin-left:0;width:100%;order:3}
+    nav.main ul{display:none;flex-direction:column;gap:3px;width:100%;padding-top:8px}
+    nav.main.open ul{display:flex}
+    nav.main a{display:block;padding:12px 14px;font-size:1.12rem;border-radius:10px}
   }
 </style>
 
@@ -319,7 +323,8 @@
       <span class="mark" aria-hidden="true"><img src="images/logo.svg" alt="" width="42" height="42"></span>
       <span class="name">WIN</span>
     </a>
-    <nav class="main" aria-label="Main">
+    <button class="navtoggle" id="navtoggle" aria-label="Open menu" aria-expanded="false" aria-controls="mainnav">☰</button>
+    <nav class="main" id="mainnav" aria-label="Main">
       <ul>
         <li><a href="#home" data-nav="home">Home</a></li>
         <li><a href="#about" data-nav="about">About</a></li>
@@ -826,11 +831,23 @@
       var name = a.getAttribute('data-nav');
       if(pages.indexOf(name) === -1){ return; }
       e.preventDefault();
+      closeMenu();
       var sc = a.getAttribute('data-scroll'); if(sc){ pendingScroll = sc; }
       if(location.hash !== '#'+name){ location.hash = name; } else { show(name); }
     });
     window.addEventListener('hashchange', fromHash);
     fromHash();
+    // mobile hamburger menu
+    var navToggle = document.getElementById('navtoggle');
+    var mainNav = document.getElementById('mainnav');
+    function closeMenu(){ if(mainNav){ mainNav.classList.remove('open'); } if(navToggle){ navToggle.setAttribute('aria-expanded','false'); navToggle.textContent='☰'; } }
+    if(navToggle && mainNav){
+      navToggle.addEventListener('click', function(){
+        var open = mainNav.classList.toggle('open');
+        navToggle.setAttribute('aria-expanded', open?'true':'false');
+        navToggle.textContent = open ? '✕' : '☰';
+      });
+    }
     // ---- Supabase: save signups and event submissions ----
     var SB_URL = "https://myrqbzlprhfkaxxiantf.supabase.co";
     var SB_KEY = "sb_publishable_35YzbcMvc_tddWJpVRMhBQ_wOThZLbI";
