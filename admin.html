@@ -108,6 +108,7 @@
     <button role="tab" data-tab="list" aria-selected="false">Mailing list</button>
     <button role="tab" data-tab="admins" aria-selected="false">Administrators</button>
     <button role="tab" data-tab="announce" aria-selected="false">Announcements</button>
+    <button role="tab" data-tab="help" aria-selected="false">Help</button>
   </div>
 
   <!-- Events tab -->
@@ -160,6 +161,43 @@
         <textarea id="an-body" disabled placeholder="Write your announcement here…"></textarea>
         <div style="margin-top:12px"><button class="btn-green" disabled>Send to mailing list</button></div>
       </div>
+    </div>
+  </section>
+
+  <!-- Help tab -->
+  <section data-panel="help" hidden>
+    <div class="panelhead"><h2>Help &amp; how-to</h2></div>
+    <p class="muted" style="margin-top:6px">A plain-English guide to running the site. Anyone with admin access can read this.</p>
+
+    <div class="card">
+      <h3 style="margin-bottom:6px">Signing in</h3>
+      <p>Go to the admin page, type your email, and click "Send me a sign-in link." Open the email and click the link — you're in, no password needed. Only approved administrators can get in. A link works once and expires, so always click the newest email.</p>
+    </div>
+
+    <div class="card">
+      <h3 style="margin-bottom:6px">Events</h3>
+      <p>When someone submits an event on the website, it appears in the <strong>Events</strong> tab marked "Pending," and you get an email. Review it, then click <strong>Approve</strong> to show it on the public site, or <strong>Reject</strong> to hide it. Nothing is ever deleted — you can change your mind with "Mark pending." The chips (Pending / Approved / Rejected / All) filter the list.</p>
+      <p style="margin-top:8px">Approved events appear automatically on the home board and the Events page. After an event's date passes, it moves on its own into "Where we've been" — you don't have to move anything.</p>
+    </div>
+
+    <div class="card">
+      <h3 style="margin-bottom:6px">Mailing list</h3>
+      <p>Everyone who signs up on the website appears in the <strong>Mailing list</strong> tab, and you get an email alert. To take someone off, click <strong>Remove</strong>; click <strong>Restore</strong> to put them back. The Active / Removed / All chips filter the list.</p>
+    </div>
+
+    <div class="card">
+      <h3 style="margin-bottom:6px">Administrators</h3>
+      <p>The <strong>Administrators</strong> tab lists everyone who can sign in here. Add one by typing their email and clicking <strong>Add admin</strong> — they can sign in right away. Remove with <strong>Remove</strong>. Keep at least two administrators so access never depends on one person.</p>
+    </div>
+
+    <div class="card">
+      <h3 style="margin-bottom:6px">Announcements</h3>
+      <p>Being finalized. The plan is to send announcements through WIN's existing announcements Google Group, which is built for bulk email. People who sign up on the website are added to that group so they receive announcements. This section will be updated once the process is set.</p>
+    </div>
+
+    <div class="card">
+      <h3 style="margin-bottom:6px">Contact messages</h3>
+      <p>Messages sent through the website's contact form arrive in WIN's Gmail inbox. Just reply from there — your reply goes straight to the person who wrote in, and your Sent folder keeps the record. There's nothing to manage here for those.</p>
     </div>
   </section>
 </div>
