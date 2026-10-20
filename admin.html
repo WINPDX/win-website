@@ -18,6 +18,8 @@
   header.bar{background:var(--header);color:#fff;padding:14px 20px;display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center}
   header.bar .title{font-size:1.3rem;font-weight:700;letter-spacing:.04em}
   header.bar .who{margin-left:auto;color:#cfe3dd;font-size:.95rem}
+  header.bar .helplink{color:#fff;font-weight:600;font-size:.95rem;text-decoration:underline;margin-left:16px}
+  header.bar .helplink:hover{color:#cfe3dd}
   .wrap{max-width:900px;margin:0 auto;padding:22px max(16px,env(safe-area-inset-left,0px)) 70px}
   .card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;margin-top:16px;box-shadow:0 1px 2px rgba(0,0,0,.05)}
   label{display:block;font-weight:600;margin:0 0 6px}
@@ -74,6 +76,7 @@
 <header class="bar">
   <span class="title">WIN Admin</span>
   <span class="who" id="who" hidden></span>
+  <a href="#" class="helplink" id="help-link" hidden>Help</a>
   <button class="btn-ghost" id="signout" hidden style="margin-left:12px">Sign out</button>
 </header>
 
@@ -108,7 +111,6 @@
     <button role="tab" data-tab="list" aria-selected="false">Mailing list</button>
     <button role="tab" data-tab="admins" aria-selected="false">Administrators</button>
     <button role="tab" data-tab="announce" aria-selected="false">Announcements</button>
-    <button role="tab" data-tab="help" aria-selected="false">Help</button>
   </div>
 
   <!-- Events tab -->
@@ -249,6 +251,7 @@
       }
       document.getElementById('who').textContent = "Signed in as " + me;
       document.getElementById('who').hidden = false;
+      document.getElementById('help-link').hidden = false;
       show('view-panel');
       loadEvents(); loadSignups(); loadAdmins();
     });
@@ -262,6 +265,12 @@
     var tab = b.getAttribute('data-tab');
     document.querySelectorAll('.tabs button').forEach(function(t){ t.setAttribute('aria-selected', t===b ? 'true':'false'); });
     document.querySelectorAll('section[data-panel]').forEach(function(s){ s.hidden = (s.getAttribute('data-panel') !== tab); });
+  });
+  document.getElementById('help-link').addEventListener('click', function(e){
+    e.preventDefault();
+    document.querySelectorAll('.tabs button').forEach(function(t){ t.setAttribute('aria-selected','false'); });
+    document.querySelectorAll('section[data-panel]').forEach(function(s){ s.hidden = (s.getAttribute('data-panel') !== 'help'); });
+    window.scrollTo(0,0);
   });
 
   // ---- events ----
