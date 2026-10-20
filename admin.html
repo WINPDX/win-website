@@ -201,6 +201,14 @@
       <h3 style="margin-bottom:6px">Contact messages</h3>
       <p>Messages sent through the website's contact form arrive in WIN's Gmail inbox. Just reply from there — your reply goes straight to the person who wrote in, and your Sent folder keeps the record. There's nothing to manage here for those.</p>
     </div>
+
+    <div class="card">
+      <h3 style="margin-bottom:6px">Keyholder notes (private)</h3>
+      <p class="muted" style="margin:0 0 10px">Private to administrators — how the site is set up and where logins live, so WIN never depends on one person. Actual passwords and keys are kept in Bitwarden, not here. Edit and Save anytime.</p>
+      <textarea id="notes-text" style="min-height:240px" placeholder="Loading…"></textarea>
+      <div style="margin-top:10px"><button class="btn-green" id="notes-save">Save notes</button></div>
+      <p class="msg" id="notes-msg" hidden></p>
+    </div>
   </section>
 </div>
 
@@ -253,7 +261,7 @@
       document.getElementById('who').hidden = false;
       document.getElementById('help-link').hidden = false;
       show('view-panel');
-      loadEvents(); loadSignups(); loadAdmins();
+      loadEvents(); loadSignups(); loadAdmins(); loadNotes();
     });
   }
   sb.auth.getSession().then(function(r){ start(r.data ? r.data.session : null); });
@@ -412,6 +420,28 @@
       loadAdmins();
     });
   });
+
+  // ---- keyholder notes ----
+  function loadNotes(){
+    var ta=document.getElementById('notes-text'); if(!ta) return;
+    sb.from('site_notes').select('content').eq('id',1).single().then(function(res){
+      if(res.error){ ta.placeholder = "Couldn't load notes."; return; }
+      ta.value = (res.data && res.data.content) ? res.data.content : '';
+      ta.placeholder = '';
+    });
+  }
+  var notesSave=document.getElementById('notes-save');
+  if(notesSave){
+    notesSave.addEventListener('click', function(){
+      var ta=document.getElementById('notes-text'); var m=document.getElementById('notes-msg'); var btn=this; var label=btn.textContent;
+      btn.disabled=true; btn.textContent='Saving…';
+      sb.from('site_notes').update({content:ta.value, updated_at:new Date().toISOString()}).eq('id',1).then(function(res){
+        btn.disabled=false; btn.textContent=label; m.hidden=false;
+        if(res.error){ m.className='msg err'; m.textContent='Could not save: '+res.error.message; return; }
+        m.className='msg'; m.textContent='Saved.';
+      });
+    });
+  }
 
 })();
 </script>
