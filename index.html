@@ -643,14 +643,15 @@
           <h2>Submit a community event</h2>
           <p style="margin-top:.5em;color:var(--ink-soft)">The steering committee reviews every submission and adds approved events to the calendar. Upload your own flyer if you have one.</p>
           <form class="cform" id="eventForm" style="margin-top:18px">
-            <div><label for="ev-name">Event name</label><input id="ev-name" type="text"></div>
+            <p style="margin:0 0 6px;font-weight:600;font-size:.95rem">All fields are required except the flyer.</p>
+            <div><label for="ev-name">Event name</label><input id="ev-name" type="text" required></div>
             <div class="row2">
-              <div><label for="ev-date">Date</label><input id="ev-date" type="date"></div>
-              <div><label for="ev-time">Time</label><input id="ev-time" type="text" placeholder="e.g. 6:00 PM"></div>
+              <div><label for="ev-date">Date</label><input id="ev-date" type="date" required></div>
+              <div><label for="ev-time">Time</label><input id="ev-time" type="text" placeholder="e.g. 6:00 PM" required></div>
             </div>
-            <div><label for="ev-loc">Location</label><input id="ev-loc" type="text"></div>
+            <div><label for="ev-loc">Location</label><input id="ev-loc" type="text" required></div>
             <div><label for="ev-host">Hosting community</label>
-              <select id="ev-host">
+              <select id="ev-host" required>
                 <option value="">Select one…</option>
                 <option>Aloha United Methodist Church</option>
                 <option>Bahá'í Community of Aloha / Washington County</option>
@@ -669,10 +670,10 @@
                 <option>Other</option>
               </select>
             </div>
-            <div><label for="ev-desc">Short description</label><textarea id="ev-desc"></textarea></div>
+            <div><label for="ev-desc">Short description</label><textarea id="ev-desc" required></textarea></div>
             <div class="row2">
-              <div><label for="ev-your-name">Your name</label><input id="ev-your-name" type="text" autocomplete="name"></div>
-              <div><label for="ev-your-email">Your email</label><input id="ev-your-email" type="email" autocomplete="email"></div>
+              <div><label for="ev-your-name">Your name</label><input id="ev-your-name" type="text" autocomplete="name" required></div>
+              <div><label for="ev-your-email">Your email</label><input id="ev-your-email" type="email" autocomplete="email" required></div>
             </div>
             <div><label for="ev-flyer">Upload a flyer <span class="opt">(optional — image, PDF, or Word)</span></label><input id="ev-flyer" type="file" accept="image/*,application/pdf,.doc,.docx"></div>
             <div><button class="btn btn-green" type="submit">Submit for review</button></div>
