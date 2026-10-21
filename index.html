@@ -890,7 +890,7 @@
         sb.from('signups').insert({ name: val(joinForm,'#jn-name') || null, email: email, religious_affiliation: val(joinForm,'#jn-rel') || null })
           .then(function(res){
             if(res.error){ setMsg(joinForm, "Sorry, something went wrong — please try again, or email us."); if(btn){ btn.disabled = false; btn.textContent = label; } return; }
-            joinForm.reset(); if(btn){ btn.textContent = "Joined ✓"; }
+            joinForm.reset(); if(btn){ btn.textContent = "Joined ✓"; setTimeout(function(){ if(btn){ btn.disabled = false; btn.textContent = label; } }, 2500); }
             setMsg(joinForm, "Thanks for joining! You'll hear from us a few times a month.");
           });
       });
@@ -919,7 +919,7 @@
             flyer_url: flyerUrl || null
           }).then(function(res){
             if(res.error){ setMsg(eventForm, "Sorry, something went wrong — please try again, or email us."); if(btn){ btn.disabled = false; btn.textContent = label; } return; }
-            eventForm.reset(); if(btn){ btn.textContent = "Submitted ✓"; }
+            eventForm.reset(); if(btn){ btn.textContent = "Submitted ✓"; setTimeout(function(){ if(btn){ btn.disabled = false; btn.textContent = label; } }, 2500); }
             setMsg(eventForm, "Thank you! Your event was sent to the steering committee for review.");
           });
         }
@@ -953,7 +953,7 @@
         sb.from('messages').insert({ name: val(contactForm,'#cf-name') || null, email: val(contactForm,'#cf-email') || null, message: msg })
           .then(function(res){
             if(res.error){ setMsg(contactForm, "Sorry, something went wrong — please try again."); if(btn){ btn.disabled=false; btn.textContent=label; } return; }
-            contactForm.reset(); if(btn){ btn.textContent = "Sent ✓"; }
+            contactForm.reset(); if(btn){ btn.textContent = "Sent ✓"; setTimeout(function(){ if(btn){ btn.disabled = false; btn.textContent = label; } }, 2500); }
             setMsg(contactForm, "Thank you! We got your note and will be in touch.");
           });
       });
