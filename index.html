@@ -477,7 +477,7 @@
         <p style="margin-top:.6em;color:#e8eceb">There's no application. No membership fee. You show up, and you're part of the movement. Come to an event, join our announcement list, or sit in on a steering committee meeting with us.</p>
         <div class="btnrow">
           <a class="btn btn-light" href="#events" data-nav="events">See events</a>
-          <a class="btn btn-ghost" href="#contact" data-nav="contact">Get announcements</a>
+          <a class="btn btn-ghost" href="#contact" data-nav="contact" data-scroll="join-form">Join Mailing List</a>
           <a class="btn btn-ghost" href="#contact" data-nav="contact">Contact us</a>
         </div>
       </div>
@@ -566,14 +566,6 @@
           <p>Potlucks · Prayer services · Community projects · Everyone welcome</p>
         </div>
 
-        <h2 class="ruled" style="margin-top:2em">Calendar</h2>
-        <div style="margin-top:14px">
-          <iframe title="WIN Community Events calendar" loading="lazy"
-            src="https://calendar.google.com/calendar/embed?src=eac9b0cf6849a24bf9bc2e27f7d0828a2e37354ac608a79b4cc242d519f09e8c%40group.calendar.google.com&amp;ctz=America%2FLos_Angeles&amp;mode=MONTH&amp;showTitle=0&amp;showCalendars=0&amp;showTz=0"
-            style="border:1px solid var(--border);border-radius:12px;width:100%;height:600px"></iframe>
-          <p class="muted" style="margin-top:8px">The WIN Community Events calendar — browse every gathering above. The lists below are a quick backup view.</p>
-        </div>
-
         <h2 class="ruled" style="margin-top:2em">What's coming up</h2>
         <div class="ev-list" id="upcoming-list"></div>
         <p class="muted" id="upcoming-empty" hidden style="margin-top:4px">No upcoming events are posted right now — check back soon, or submit one below.</p>
@@ -641,7 +633,7 @@
 
         <div class="share-card" id="event-form" style="margin-top:2em">
           <h2>Submit a community event</h2>
-          <p style="margin-top:.5em;color:var(--ink-soft)">The steering committee reviews every submission and adds approved events to the calendar. Upload your own flyer if you have one.</p>
+          <p style="margin-top:.5em;color:var(--ink-soft)">The steering committee reviews every submission and adds approved events to the Events page. Upload your own flyer if you have one.</p>
           <form class="cform" id="eventForm" style="margin-top:18px">
             <p style="margin:0 0 6px;font-weight:600;font-size:.95rem">All fields are required except the flyer.</p>
             <div><label for="ev-name">Event name</label><input id="ev-name" type="text" required></div>
@@ -742,7 +734,7 @@
           <p>The steering committee is always looking for the next way to show up. Service projects come from the community — someone sees a need, brings it to the group, and we figure out how to help together.</p>
           <p>Have an idea? Know a neighbor who needs a hand? A community project we could join?</p>
         </div>
-        <div class="callout"><p><strong>Want to help?</strong> <a href="#contact" data-nav="contact" data-scroll="contact-form">Send us a message →</a></p><p style="margin-top:.5em">Service events appear on our events calendar. <a href="#events" data-nav="events">See events →</a></p></div>
+        <div class="callout"><p><strong>Want to help?</strong> <a href="#contact" data-nav="contact" data-scroll="contact-form">Send us a message →</a></p><p style="margin-top:.5em">Service events appear on our Events page. <a href="#events" data-nav="events">See events →</a></p></div>
       </div>
     </section>
   </article>
@@ -755,7 +747,7 @@
         <p class="subitalic" style="font-style:normal;color:var(--ink-soft)">Questions, ideas, or just want to say hello? We read every email.</p>
         <p style="margin-top:1em;color:var(--ink-soft);max-width:62ch">Westside Interfaith Neighbors is a coalition of 14 faith communities on Portland's westside. We gather for potlucks, prayer services, education, and service — and we'd love to hear from you.</p>
 
-        <div class="share-card" style="margin-top:2em">
+        <div class="share-card" id="join-form" style="margin-top:2em">
           <h2>Join our announcement list</h2>
           <p style="margin-top:.4em;color:var(--ink-soft)">A few emails a month about what's coming up. We'll never share your address.</p>
           <form class="cform" id="joinForm" style="margin-top:16px">
