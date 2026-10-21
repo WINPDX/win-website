@@ -252,11 +252,11 @@
     if(!session){ show('view-login'); return; }
     me = session.user && session.user.email ? session.user.email : null;
     sb.rpc('is_admin').then(function(res){
-      document.getElementById('signout').hidden = false;
       if(res.error || !res.data){
         document.getElementById('denied-email').textContent = me || "";
         show('view-denied'); return;
       }
+      document.getElementById('signout').hidden = false;
       document.getElementById('who').textContent = "Signed in as " + me;
       document.getElementById('who').hidden = false;
       document.getElementById('help-link').hidden = false;
