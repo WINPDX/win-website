@@ -112,7 +112,6 @@
     <button role="tab" data-tab="events" aria-selected="true">Events</button>
     <button role="tab" data-tab="list" aria-selected="false">Mailing list</button>
     <button role="tab" data-tab="admins" aria-selected="false">Administrators</button>
-    <button role="tab" data-tab="announce" aria-selected="false">Announcements</button>
   </div>
 
   <!-- Events tab -->
@@ -131,7 +130,7 @@
   <!-- Mailing list tab -->
   <section data-panel="list" hidden>
     <div class="panelhead"><h2>Mailing list</h2></div>
-    <p class="msg" style="margin-top:12px">These addresses are to be added to the Google Group manually, then removed from this section.</p>
+    <p class="msg" style="margin-top:12px">Admins must take the emails in the mailing list section and add them to the Google Group manually, then delete them from the admin page.</p>
     <div class="chips" id="su-chips">
       <button class="chip" data-filter="active" aria-pressed="true">Active</button>
       <button class="chip" data-filter="removed" aria-pressed="false">Removed</button>
@@ -153,22 +152,6 @@
     <p class="msg" id="ad-msg" hidden></p>
   </section>
 
-  <!-- Announcements tab -->
-  <section data-panel="announce" hidden>
-    <div class="panelhead"><h2>Send an announcement</h2></div>
-    <div class="card">
-      <p class="msg" style="margin-top:0">Email sending isn't connected yet. Once the email service is set up, this is where you'll write an announcement and send it to everyone on the active mailing list.</p>
-      <div style="margin-top:16px;opacity:.6">
-        <label for="an-subject">Subject</label>
-        <input id="an-subject" type="text" disabled placeholder="e.g. This Saturday: Interfaith Potluck">
-        <div style="height:12px"></div>
-        <label for="an-body">Message</label>
-        <textarea id="an-body" disabled placeholder="Write your announcement here…"></textarea>
-        <div style="margin-top:12px"><button class="btn-green" disabled>Send to mailing list</button></div>
-      </div>
-    </div>
-  </section>
-
   <!-- Help tab -->
   <section data-panel="help" hidden>
     <div class="panelhead"><h2>Help &amp; how-to</h2></div>
@@ -188,16 +171,12 @@
     <div class="card">
       <h3 style="margin-bottom:6px">Mailing list</h3>
       <p>Everyone who signs up on the website appears in the <strong>Mailing list</strong> tab, and you get an email alert. To take someone off, click <strong>Remove</strong>; click <strong>Restore</strong> to put them back. The Active / Removed / All chips filter the list.</p>
+      <p style="margin-top:8px">Admins must take the emails in the mailing list section and add them to the Google Group manually, then delete them from the admin page.</p>
     </div>
 
     <div class="card">
       <h3 style="margin-bottom:6px">Administrators</h3>
       <p>The <strong>Administrators</strong> tab lists everyone who can sign in here. Add one by typing their email and clicking <strong>Add admin</strong> — they can sign in right away. Remove with <strong>Remove</strong>. Keep at least two administrators so access never depends on one person.</p>
-    </div>
-
-    <div class="card">
-      <h3 style="margin-bottom:6px">Announcements</h3>
-      <p>Being finalized. The plan is to send announcements through WIN's existing announcements Google Group, which is built for bulk email. People who sign up on the website are added to that group so they receive announcements. This section will be updated once the process is set.</p>
     </div>
 
     <div class="card">
